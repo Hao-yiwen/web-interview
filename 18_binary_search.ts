@@ -3,71 +3,7 @@
 // ============================================
 
 // ------------------------------------------
-// 1. 搜索插入位置 (Search Insert Position) [简单]
-// ------------------------------------------
-// 给定一个排序数组和一个目标值，在数组中找到目标值，并返回其索引。
-// 如果目标值不存在于数组中，返回它将会被按顺序插入的位置。
-// 请必须使用时间复杂度为 O(log n) 的算法。
-//
-// 示例 1：
-//   输入：nums = [1,3,5,6], target = 5
-//   输出：2
-//
-// 示例 2：
-//   输入：nums = [1,3,5,6], target = 2
-//   输出：1
-//
-// 示例 3：
-//   输入：nums = [1,3,5,6], target = 7
-//   输出：4
-
-function searchInsert(nums: number[], target: number): number {
-  return 0;
-}
-
-// ------------------------------------------
-// 2. 搜索二维矩阵 (Search a 2D Matrix) [中等]
-// ------------------------------------------
-// 给你一个满足下述两条属性的 m x n 整数矩阵：
-// - 每行中的整数从左到右按非严格递增顺序排列。
-// - 每行的第一个整数大于前一行的最后一个整数。
-// 给你一个整数 target，如果 target 在矩阵中，返回 true；否则，返回 false。
-//
-// 示例 1：
-//   输入：matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 3
-//   输出：true
-//
-// 示例 2：
-//   输入：matrix = [[1,3,5,7],[10,11,16,20],[23,30,34,60]], target = 13
-//   输出：false
-
-function searchMatrix(matrix: number[][], target: number): boolean {
-  return false;
-}
-
-// ------------------------------------------
-// 3. 寻找峰值 (Find Peak Element) [中等]
-// ------------------------------------------
-// 峰值元素是指其值严格大于左右相邻值的元素。
-// 给你一个整数数组 nums，找到峰值元素并返回其索引。数组可能包含多个峰值，
-// 在这种情况下，返回 任何一个峰值 所在位置即可。
-// 你可以假设 nums[-1] = nums[n] = -∞。
-// 你必须实现时间复杂度为 O(log n) 的算法来解决此问题。
-//
-// 示例 1：
-//   输入：nums = [1,2,3,1]
-//   输出：2（nums[2] 是峰值元素，返回其索引 2）
-//
-// 示例 2：
-//   输入：nums = [1,2,1,3,5,6,4]
-//   输出：5（返回索引 1 或 5 均可）
-
-function findPeakElement(nums: number[]): number {
-  return 0;
-}
-
-// ------------------------------------------
-// 4. 搜索旋转排序数组 (Search in Rotated Sorted Array) [中等]
+// 1. 搜索旋转排序数组 (Search in Rotated Sorted Array) [中等]
 // ------------------------------------------
 // 整数数组 nums 按升序排列，数组中的值 互不相同。
 // 在传递给函数之前，nums 在预先未知的某个下标 k 上进行了 旋转，
@@ -89,11 +25,21 @@ function findPeakElement(nums: number[]): number {
 //   输出：-1
 
 function searchRotated(nums: number[], target: number): number {
+  let l = 0, r = nums.length - 1;
+  while (l <= r) {
+    const mid = (l + r) >> 1;
+    if (nums[mid] === target) return mid;
+    if (nums[l] <= nums[mid]) {
+      if (nums[l] <= target && target < nums[mid]) r = mid - 1; else l = mid + 1;
+    } else {
+      if (nums[mid] < target && target <= nums[r]) l = mid + 1; else r = mid - 1;
+    }
+  }
   return -1;
 }
 
 // ------------------------------------------
-// 5. 在排序数组中查找元素的第一个和最后一个位置 (Find First and Last Position of Element in Sorted Array) [中等]
+// 2. 在排序数组中查找元素的第一个和最后一个位置 (Find First and Last Position of Element in Sorted Array) [中等]
 // ------------------------------------------
 // 给你一个按照非递减顺序排列的整数数组 nums，和一个目标值 target。
 // 请你找出给定目标值在数组中的开始位置和结束位置。
@@ -113,11 +59,29 @@ function searchRotated(nums: number[], target: number): number {
 //   输出：[-1,-1]
 
 function searchRange(nums: number[], target: number): number[] {
-  return [-1, -1];
+  const findFirst = () => {
+    let l = 0, r = nums.length - 1, res = -1;
+    while (l <= r) {
+      const mid = (l + r) >> 1;
+      if (nums[mid] === target) { res = mid; r = mid - 1; }
+      else if (nums[mid] < target) l = mid + 1; else r = mid - 1;
+    }
+    return res;
+  };
+  const findLast = () => {
+    let l = 0, r = nums.length - 1, res = -1;
+    while (l <= r) {
+      const mid = (l + r) >> 1;
+      if (nums[mid] === target) { res = mid; l = mid + 1; }
+      else if (nums[mid] < target) l = mid + 1; else r = mid - 1;
+    }
+    return res;
+  };
+  return [findFirst(), findLast()];
 }
 
 // ------------------------------------------
-// 6. 寻找旋转排序数组中的最小值 (Find Minimum in Rotated Sorted Array) [中等]
+// 3. 寻找旋转排序数组中的最小值 (Find Minimum in Rotated Sorted Array) [中等]
 // ------------------------------------------
 // 已知一个长度为 n 的数组，预先按照升序排列，经由 1 到 n 次 旋转 后，得到输入数组。
 // 注意，旋转数组 [a[0], a[1], ..., a[n-1]] 一次的结果为 [a[n-1], a[0], a[1], ..., a[n-2]]。
@@ -137,11 +101,16 @@ function searchRange(nums: number[], target: number): number[] {
 //   输出：11
 
 function findMin(nums: number[]): number {
-  return 0;
+  let l = 0, r = nums.length - 1;
+  while (l < r) {
+    const mid = (l + r) >> 1;
+    if (nums[mid] > nums[r]) l = mid + 1; else r = mid;
+  }
+  return nums[l];
 }
 
 // ------------------------------------------
-// 7. 寻找两个正序数组的中位数 (Median of Two Sorted Arrays) [困难]
+// 4. 寻找两个正序数组的中位数 (Median of Two Sorted Arrays) [困难]
 // ------------------------------------------
 // 给定两个大小分别为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。
 // 请你找出并返回这两个正序数组的 中位数。
@@ -156,5 +125,20 @@ function findMin(nums: number[]): number {
 //   输出：2.50000（合并数组 = [1,2,3,4]，中位数 (2+3)/2 = 2.5）
 
 function findMedianSortedArrays(nums1: number[], nums2: number[]): number {
+  if (nums1.length > nums2.length) return findMedianSortedArrays(nums2, nums1);
+  const m = nums1.length, n = nums2.length;
+  let l = 0, r = m;
+  while (l <= r) {
+    const i = (l + r) >> 1;
+    const j = Math.floor((m + n + 1) / 2) - i;
+    const maxL1 = i === 0 ? -Infinity : nums1[i - 1];
+    const minR1 = i === m ? Infinity : nums1[i];
+    const maxL2 = j === 0 ? -Infinity : nums2[j - 1];
+    const minR2 = j === n ? Infinity : nums2[j];
+    if (maxL1 <= minR2 && maxL2 <= minR1) {
+      if ((m + n) % 2 === 1) return Math.max(maxL1, maxL2);
+      return (Math.max(maxL1, maxL2) + Math.min(minR1, minR2)) / 2;
+    } else if (maxL1 > minR2) r = i - 1; else l = i + 1;
+  }
   return 0;
 }

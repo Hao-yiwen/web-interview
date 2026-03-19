@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/haoyiwen/Documents/ai/web-interview_副本/**)",
+      "Bash(cp /Users/haoyiwen/Documents/ai/web-interview/01_array_string.ts /Users/haoyiwen/Documents/ai/web-interview_副本/01_array_string.ts)",
+      "Bash(cp /Users/haoyiwen/Documents/ai/web-interview/02_two_pointers.ts /Users/haoyiwen/Documents/ai/web-interview_副本/02_two_pointers.ts)",
+      "Bash(cp /Users/haoyiwen/Documents/ai/web-interview/03_sliding_window.ts /Users/haoyiwen/Documents/ai/web-interview_副本/03_sliding_window.ts)",
+      "Bash(cp /Users/haoyiwen/Documents/ai/web-interview/04_matrix.ts /Users/haoyiwen/Documents/ai/web-interview_副本/04_matrix.ts)",
+      "Bash(cp /Users/haoyiwen/Documents/ai/web-interview/05_hashmap.ts /Users/haoyiwen/Documents/ai/web-interview_副本/05_hashmap.ts)"
+    ]
+  }
+}

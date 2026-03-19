@@ -28,71 +28,21 @@
 //   输出：3
 
 function numIslands(grid: string[][]): number {
-  return 0;
+  const m = grid.length, n = grid[0].length;
+  let count = 0;
+  function dfs(r: number, c: number) {
+    if (r < 0 || r >= m || c < 0 || c >= n || grid[r][c] !== "1") return;
+    grid[r][c] = "0";
+    dfs(r+1,c); dfs(r-1,c); dfs(r,c+1); dfs(r,c-1);
+  }
+  for (let r = 0; r < m; r++)
+    for (let c = 0; c < n; c++)
+      if (grid[r][c] === "1") { count++; dfs(r, c); }
+  return count;
 }
 
 // ------------------------------------------
-// 2. 被围绕的区域 (Surrounded Regions) [中等]
-// ------------------------------------------
-// 给你一个 m x n 的矩阵 board，由若干字符 'X' 和 'O' 组成，
-// 捕获 所有 被围绕的区域：
-// - 连接：一个单元格与其上下左右的单元格水平或垂直相连。
-// - 区域：连接所有 'O' 的单元格来形成一个区域。
-// - 围绕：如果您可以用 'X' 单元格连接这个区域，并且区域中没有任何 'O' 单元格位于 board 边缘，
-//   则该区域被 'X' 围绕。
-// 将被围绕区域中所有 'O' 用 'X' 替换。
-//
-// 示例 1：
-//   输入：board = [["X","X","X","X"],["X","O","O","X"],["X","X","O","X"],["X","O","X","X"]]
-//   输出：[["X","X","X","X"],["X","X","X","X"],["X","X","X","X"],["X","O","X","X"]]
-//   解释：底部的 'O' 位于边界上所以不会被替换。其他三个 'O' 被 'X' 围绕所以被替换。
-
-function solve(board: string[][]): void {
-
-}
-
-// ------------------------------------------
-// 3. 克隆图 (Clone Graph) [中等]
-// ------------------------------------------
-// 给你无向 连通 图中一个节点的引用，请你返回该图的 深拷贝（克隆）。
-// 图中的每个节点都包含它的值 val（int）和其邻居的列表（list[Node]）。
-//
-// 示例 1：
-//   输入：adjList = [[2,4],[1,3],[2,4],[1,3]]
-//   输出：[[2,4],[1,3],[2,4],[1,3]]
-//
-// 示例 2：
-//   输入：adjList = [[]]
-//   输出：[[]]
-
-// function cloneGraph(node: GraphNode | null): GraphNode | null { return null; }
-
-// ------------------------------------------
-// 4. 除法求值 (Evaluate Division) [中等]
-// ------------------------------------------
-// 给你一个变量对数组 equations 和一个实数值数组 values 作为已知条件，
-// 其中 equations[i] = [Ai, Bi] 和 values[i] 共同表示等式 Ai / Bi = values[i]。
-// 每个 Ai 或 Bi 是一个表示单个变量的字符串。
-// 另有一些以数组 queries 表示的问题，其中 queries[j] = [Cj, Dj] 表示第 j 个问题，
-// 请你根据已知条件找出 Cj / Dj = ? 的结果作为答案。
-// 如果存在某个无法确定的答案，则用 -1.0 替代这个答案。如果问题中出现了给定的已知条件中没有出现的字符串，也需要用 -1.0 替代这个答案。
-//
-// 示例 1：
-//   输入：equations = [["a","b"],["b","c"]], values = [2.0,3.0],
-//         queries = [["a","c"],["b","a"],["a","e"],["a","a"],["x","x"]]
-//   输出：[6.00000,0.50000,-1.00000,1.00000,-1.00000]
-//
-// 示例 2：
-//   输入：equations = [["a","b"],["b","c"],["bc","cd"]], values = [1.5,2.5,5.0],
-//         queries = [["a","c"],["c","b"],["bc","cd"],["cd","bc"]]
-//   输出：[3.75000,0.40000,5.00000,0.20000]
-
-function calcEquation(equations: string[][], values: number[], queries: string[][]): number[] {
-  return [];
-}
-
-// ------------------------------------------
-// 5. 课程表 (Course Schedule) [中等]
+// 2. 课程表 (Course Schedule) [中等]
 // ------------------------------------------
 // 你这个学期必须选修 numCourses 门课程，记为 0 到 numCourses - 1。
 // 在选修某些课程之前需要一些先修课程。先修课程按数组 prerequisites 给出，
@@ -108,11 +58,21 @@ function calcEquation(equations: string[][], values: number[], queries: string[]
 //   输出：false（存在循环依赖）
 
 function canFinish(numCourses: number, prerequisites: number[][]): boolean {
-  return false;
+  const indegree = new Array(numCourses).fill(0);
+  const adj: number[][] = Array.from({length: numCourses}, () => []);
+  for (const [a, b] of prerequisites) { adj[b].push(a); indegree[a]++; }
+  const queue: number[] = [];
+  for (let i = 0; i < numCourses; i++) if (indegree[i] === 0) queue.push(i);
+  let completed = 0;
+  while (queue.length) {
+    const node = queue.shift()!; completed++;
+    for (const next of adj[node]) if (--indegree[next] === 0) queue.push(next);
+  }
+  return completed === numCourses;
 }
 
 // ------------------------------------------
-// 6. 课程表 II (Course Schedule II) [中等]
+// 3. 课程表 II (Course Schedule II) [中等]
 // ------------------------------------------
 // 现在你总共有 numCourses 门课需要选，记为 0 到 numCourses - 1。
 // 给你一个数组 prerequisites，其中 prerequisites[i] = [ai, bi]，表示在选修课程 ai 前 必须 先选修 bi。
@@ -132,5 +92,15 @@ function canFinish(numCourses: number, prerequisites: number[][]): boolean {
 //   输出：[0]
 
 function findOrder(numCourses: number, prerequisites: number[][]): number[] {
-  return [];
+  const indegree = new Array(numCourses).fill(0);
+  const adj: number[][] = Array.from({length: numCourses}, () => []);
+  for (const [a, b] of prerequisites) { adj[b].push(a); indegree[a]++; }
+  const queue: number[] = [];
+  for (let i = 0; i < numCourses; i++) if (indegree[i] === 0) queue.push(i);
+  const order: number[] = [];
+  while (queue.length) {
+    const node = queue.shift()!; order.push(node);
+    for (const next of adj[node]) if (--indegree[next] === 0) queue.push(next);
+  }
+  return order.length === numCourses ? order : [];
 }

@@ -22,28 +22,19 @@
 //   输出：["a","b","c"]
 
 function letterCombinations(digits: string): string[] {
-  return [];
+  if (!digits) return [];
+  const map: Record<string, string> = {"2":"abc","3":"def","4":"ghi","5":"jkl","6":"mno","7":"pqrs","8":"tuv","9":"wxyz"};
+  const res: string[] = [];
+  function bt(idx: number, cur: string) {
+    if (idx === digits.length) { res.push(cur); return; }
+    for (const c of map[digits[idx]]) bt(idx + 1, cur + c);
+  }
+  bt(0, "");
+  return res;
 }
 
 // ------------------------------------------
-// 2. 组合 (Combinations) [中等]
-// ------------------------------------------
-// 给定两个整数 n 和 k，返回范围 [1, n] 中所有可能的 k 个数的组合。你可以按 任何顺序 返回答案。
-//
-// 示例 1：
-//   输入：n = 4, k = 2
-//   输出：[[1,2],[1,3],[1,4],[2,3],[2,4],[3,4]]
-//
-// 示例 2：
-//   输入：n = 1, k = 1
-//   输出：[[1]]
-
-function combine(n: number, k: number): number[][] {
-  return [];
-}
-
-// ------------------------------------------
-// 3. 全排列 (Permutations) [中等]
+// 2. 全排列 (Permutations) [中等]
 // ------------------------------------------
 // 给定一个不含重复数字的数组 nums，返回其 所有可能的全排列。你可以 按任意顺序 返回答案。
 //
@@ -60,11 +51,22 @@ function combine(n: number, k: number): number[][] {
 //   输出：[[1]]
 
 function permute(nums: number[]): number[][] {
-  return [];
+  const res: number[][] = [];
+  function bt(cur: number[], used: boolean[]) {
+    if (cur.length === nums.length) { res.push([...cur]); return; }
+    for (let i = 0; i < nums.length; i++) {
+      if (used[i]) continue;
+      used[i] = true; cur.push(nums[i]);
+      bt(cur, used);
+      used[i] = false; cur.pop();
+    }
+  }
+  bt([], new Array(nums.length).fill(false));
+  return res;
 }
 
 // ------------------------------------------
-// 4. 组合总和 (Combination Sum) [中等]
+// 3. 组合总和 (Combination Sum) [中等]
 // ------------------------------------------
 // 给你一个 无重复元素 的整数数组 candidates 和一个目标整数 target，
 // 找出 candidates 中可以使数字和为目标数 target 的 所有 不同组合，并以列表形式返回。
@@ -84,29 +86,21 @@ function permute(nums: number[]): number[][] {
 //   输出：[]
 
 function combinationSum(candidates: number[], target: number): number[][] {
-  return [];
+  const res: number[][] = [];
+  candidates.sort((a, b) => a - b);
+  function bt(start: number, cur: number[], remain: number) {
+    if (remain === 0) { res.push([...cur]); return; }
+    for (let i = start; i < candidates.length; i++) {
+      if (candidates[i] > remain) break;
+      cur.push(candidates[i]); bt(i, cur, remain - candidates[i]); cur.pop();
+    }
+  }
+  bt(0, [], target);
+  return res;
 }
 
 // ------------------------------------------
-// 5. N 皇后 II (N-Queens II) [困难]
-// ------------------------------------------
-// n 皇后问题 研究的是如何将 n 个皇后放置在 n × n 的棋盘上，并且使皇后彼此之间不能相互攻击。
-// 给你一个整数 n，返回 n 皇后问题 不同的解决方案的数量。
-//
-// 示例 1：
-//   输入：n = 4
-//   输出：2
-//
-// 示例 2：
-//   输入：n = 1
-//   输出：1
-
-function totalNQueens(n: number): number {
-  return 0;
-}
-
-// ------------------------------------------
-// 6. 括号生成 (Generate Parentheses) [中等]
+// 4. 括号生成 (Generate Parentheses) [中等]
 // ------------------------------------------
 // 数字 n 代表生成括号的对数，请你设计一个函数，用于能够生成所有可能的并且 有效的 括号组合。
 //
@@ -119,11 +113,18 @@ function totalNQueens(n: number): number {
 //   输出：["()"]
 
 function generateParenthesis(n: number): string[] {
-  return [];
+  const res: string[] = [];
+  function bt(cur: string, open: number, close: number) {
+    if (cur.length === 2 * n) { res.push(cur); return; }
+    if (open < n) bt(cur + "(", open + 1, close);
+    if (close < open) bt(cur + ")", open, close + 1);
+  }
+  bt("", 0, 0);
+  return res;
 }
 
 // ------------------------------------------
-// 7. 单词搜索 (Word Search) [中等]
+// 5. 单词搜索 (Word Search) [中等]
 // ------------------------------------------
 // 给定一个 m x n 二维字符网格 board 和一个字符串单词 word。
 // 如果 word 存在于网格中，返回 true；否则，返回 false。
@@ -143,5 +144,17 @@ function generateParenthesis(n: number): string[] {
 //   输出：false
 
 function exist(board: string[][], word: string): boolean {
+  const m = board.length, n = board[0].length;
+  function dfs(r: number, c: number, idx: number): boolean {
+    if (idx === word.length) return true;
+    if (r < 0 || r >= m || c < 0 || c >= n || board[r][c] !== word[idx]) return false;
+    const tmp = board[r][c]; board[r][c] = "#";
+    const found = dfs(r+1,c,idx+1)||dfs(r-1,c,idx+1)||dfs(r,c+1,idx+1)||dfs(r,c-1,idx+1);
+    board[r][c] = tmp;
+    return found;
+  }
+  for (let r = 0; r < m; r++)
+    for (let c = 0; c < n; c++)
+      if (dfs(r, c, 0)) return true;
   return false;
 }

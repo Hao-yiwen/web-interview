@@ -22,7 +22,12 @@
 //   输出：0
 
 function minSubArrayLen(target: number, nums: number[]): number {
-  return 0;
+  let l = 0, sum = 0, res = Infinity;
+  for (let r = 0; r < nums.length; r++) {
+    sum += nums[r];
+    while (sum >= target) { res = Math.min(res, r - l + 1); sum -= nums[l++]; }
+  }
+  return res === Infinity ? 0 : res;
 }
 
 // ------------------------------------------
@@ -43,31 +48,14 @@ function minSubArrayLen(target: number, nums: number[]): number {
 //   输出：3（无重复字符的最长子串是 "wke"，长度为 3）
 
 function lengthOfLongestSubstring(s: string): number {
-  return 0;
-}
-
-// ------------------------------------------
-// 3. 串联所有单词的子串 (Substring with Concatenation of All Words) [困难]
-// ------------------------------------------
-// 给定一个字符串 s 和一个字符串数组 words。words 中所有字符串 长度相同。
-// s 中的 串联子串 是指一个包含 words 中所有字符串以任意顺序排列连接起来的子串。
-// 返回所有串联子串在 s 中的开始索引。你可以以 任意顺序 返回答案。
-//
-// 示例 1：
-//   输入：s = "barfoothefoobarman", words = ["foo","bar"]
-//   输出：[0,9]
-//   解释：子串 "barfoo" 开始于索引 0，子串 "foobar" 开始于索引 9。
-//
-// 示例 2：
-//   输入：s = "wordgoodgoodgoodbestword", words = ["word","good","best","word"]
-//   输出：[]（不存在满足条件的子串）
-//
-// 示例 3：
-//   输入：s = "barfoofoobarthefoobarman", words = ["bar","foo","the"]
-//   输出：[6,9,12]
-
-function findSubstring(s: string, words: string[]): number[] {
-  return [];
+  const map = new Map<string, number>();
+  let l = 0, res = 0;
+  for (let r = 0; r < s.length; r++) {
+    if (map.has(s[r]) && map.get(s[r])! >= l) l = map.get(s[r])! + 1;
+    map.set(s[r], r);
+    res = Math.max(res, r - l + 1);
+  }
+  return res;
 }
 
 // ------------------------------------------
@@ -92,5 +80,22 @@ function findSubstring(s: string, words: string[]): number[] {
 //   输出：""（t 中两个 'a' 需要被包含，但 s 中只有一个 'a'）
 
 function minWindow(s: string, t: string): string {
-  return "";
+  const need = new Map<string, number>();
+  for (const c of t) need.set(c, (need.get(c) ?? 0) + 1);
+  let have = 0, required = need.size;
+  const window = new Map<string, number>();
+  let l = 0, res = "", minLen = Infinity;
+  for (let r = 0; r < s.length; r++) {
+    const c = s[r];
+    window.set(c, (window.get(c) ?? 0) + 1);
+    if (need.has(c) && window.get(c) === need.get(c)) have++;
+    while (have === required) {
+      if (r - l + 1 < minLen) { minLen = r - l + 1; res = s.substring(l, r + 1); }
+      const lc = s[l];
+      window.set(lc, window.get(lc)! - 1);
+      if (need.has(lc) && window.get(lc)! < need.get(lc)!) have--;
+      l++;
+    }
+  }
+  return res;
 }

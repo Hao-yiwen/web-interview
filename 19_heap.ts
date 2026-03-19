@@ -18,58 +18,18 @@
 //   输出：4
 
 function findKthLargest(nums: number[], k: number): number {
-  return 0;
+  function quickSelect(l: number, r: number): number {
+    const pivot = nums[r]; let p = l;
+    for (let i = l; i < r; i++) if (nums[i] >= pivot) [nums[i], nums[p]] = [nums[p++], nums[i]];
+    [nums[p], nums[r]] = [nums[r], nums[p]];
+    if (p === k - 1) return nums[p];
+    return p < k - 1 ? quickSelect(p + 1, r) : quickSelect(l, p - 1);
+  }
+  return quickSelect(0, nums.length - 1);
 }
 
 // ------------------------------------------
-// 2. IPO [困难]
-// ------------------------------------------
-// 假设力扣（LeetCode）即将开始 IPO。为了以更高的价格将股票卖给风险投资公司，
-// 力扣希望在 IPO 之前开展一些项目以增加其资本。由于资源有限，它只能在 IPO 之前
-// 最多完成 k 个不同的项目。帮助力扣设计完成最多 k 个项目后得到最大总资本的方式。
-//
-// 给你 n 个项目。对于每个项目 i，它都有一个纯利润 profits[i]，和启动该项目需要的
-// 最低资本 capital[i]。
-// 最初，你的资本为 w。当你完成一个项目时，你将获得纯利润，且利润将被添加到你的总资本中。
-// 总而言之，从给定项目中选择 最多 k 个不同项目的列表，以 最大化最终资本，并输出最终可获得的最多资本。
-//
-// 示例 1：
-//   输入：k = 2, w = 0, profits = [1,2,3], capital = [0,1,1]
-//   输出：4
-//   解释：初始资本 w=0，只能启动项目 0，获得利润 1，资本变为 1。
-//         然后可以启动项目 1 或 2，选择项目 2 获利润 3，最终资本 = 0+1+3 = 4。
-//
-// 示例 2：
-//   输入：k = 3, w = 0, profits = [1,2,3], capital = [0,1,2]
-//   输出：6
-
-function findMaximizedCapital(k: number, w: number, profits: number[], capital: number[]): number {
-  return 0;
-}
-
-// ------------------------------------------
-// 3. 查找和最小的 K 对数字 (Find K Pairs with Smallest Sums) [中等]
-// ------------------------------------------
-// 给定两个以 非递减顺序排列 的整数数组 nums1 和 nums2，以及一个整数 k。
-// 定义一对值 (u,v)，其中第一个元素来自 nums1，第二个元素来自 nums2。
-// 请找到和最小的 k 个数对 (u1,v1), (u2,v2), ..., (uk,vk)。
-//
-// 示例 1：
-//   输入：nums1 = [1,7,11], nums2 = [2,4,6], k = 3
-//   输出：[[1,2],[1,4],[1,6]]
-//   解释：返回序列中的前 3 对数：[1,2],[1,4],[1,6],[7,2],[7,4],[11,2],[7,6],[11,4],[11,6]
-//
-// 示例 2：
-//   输入：nums1 = [1,1,2], nums2 = [1,2,3], k = 2
-//   输出：[[1,1],[1,1]]
-//   解释：返回序列中的前 2 对数：[1,1],[1,1],[1,2],[2,1],[1,2],[2,2],[1,3],[1,3],[2,3]
-
-function kSmallestPairs(nums1: number[], nums2: number[], k: number): number[][] {
-  return [];
-}
-
-// ------------------------------------------
-// 4. 数据流的中位数 (Find Median from Data Stream) [困难]
+// 2. 数据流的中位数 (Find Median from Data Stream) [困难]
 // ------------------------------------------
 // 中位数是有序整数列表中间的数。如果列表的大小是偶数，则没有中间值，中位数是两个中间值的平均值。
 // 例如：
@@ -91,7 +51,19 @@ function kSmallestPairs(nums1: number[], nums2: number[], k: number): number[][]
 //     findMedian() -> 2.0
 
 class MedianFinder {
-  constructor() {}
-  addNum(num: number): void {}
-  findMedian(): number { return 0; }
+  private lo: number[];  // 大根堆（用负数模拟）
+  private hi: number[];  // 小根堆
+
+  constructor() { this.lo = []; this.hi = []; }
+
+  addNum(num: number): void {
+    this.lo.push(-num); this.lo.sort((a, b) => a - b);
+    this.hi.push(-this.lo.shift()!); this.hi.sort((a, b) => a - b);
+    if (this.lo.length < this.hi.length) { this.lo.push(-this.hi.shift()!); this.lo.sort((a, b) => a - b); }
+  }
+
+  findMedian(): number {
+    if (this.lo.length > this.hi.length) return -this.lo[0];
+    return (-this.lo[0] + this.hi[0]) / 2;
+  }
 }

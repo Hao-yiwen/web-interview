@@ -12,30 +12,7 @@ class ListNode {
 }
 
 // ------------------------------------------
-// 1. 环形链表 (Linked List Cycle) [简单]
-// ------------------------------------------
-// 给你一个链表的头节点 head，判断链表中是否有环。
-// 如果链表中有某个节点，可以通过连续跟踪 next 指针再次到达，则链表中存在环。
-// 如果链表中存在环，则返回 true。否则，返回 false。
-//
-// 示例 1：
-//   输入：head = [3,2,0,-4], pos = 1（尾部连接到索引 1）
-//   输出：true
-//
-// 示例 2：
-//   输入：head = [1,2], pos = 0
-//   输出：true
-//
-// 示例 3：
-//   输入：head = [1], pos = -1
-//   输出：false
-
-function hasCycle(head: ListNode | null): boolean {
-  return false;
-}
-
-// ------------------------------------------
-// 2. 两数相加 (Add Two Numbers) [中等]
+// 1. 两数相加 (Add Two Numbers) [中等]
 // ------------------------------------------
 // 给你两个 非空 的链表，表示两个非负的整数。它们每位数字都是按照 逆序 的方式存储的，
 // 并且每个节点只能存储 一位 数字。请你将两个数相加，并以相同形式返回一个表示和的链表。
@@ -53,12 +30,22 @@ function hasCycle(head: ListNode | null): boolean {
 //   输入：l1 = [9,9,9,9,9,9,9], l2 = [9,9,9,9]
 //   输出：[8,9,9,9,0,0,0,1]
 
-function addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | null {
-  return null;
+function addTwoNumbers(
+  l1: ListNode | null,
+  l2: ListNode | null,
+): ListNode | null {
+  const dummy = new ListNode(); let cur = dummy, carry = 0;
+  while (l1 || l2 || carry) {
+    const sum = (l1?.val ?? 0) + (l2?.val ?? 0) + carry;
+    carry = Math.floor(sum / 10);
+    cur.next = new ListNode(sum % 10); cur = cur.next;
+    l1 = l1?.next ?? null; l2 = l2?.next ?? null;
+  }
+  return dummy.next;
 }
 
 // ------------------------------------------
-// 3. 合并两个有序链表 (Merge Two Sorted Lists) [简单]
+// 2. 合并两个有序链表 (Merge Two Sorted Lists) [简单]
 // ------------------------------------------
 // 将两个升序链表合并为一个新的 升序 链表并返回。新链表是通过拼接给定的两个链表的所有节点组成的。
 //
@@ -74,29 +61,22 @@ function addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | nul
 //   输入：l1 = [], l2 = [0]
 //   输出：[0]
 
-function mergeTwoLists(l1: ListNode | null, l2: ListNode | null): ListNode | null {
-  return null;
+function mergeTwoLists(
+  l1: ListNode | null,
+  l2: ListNode | null,
+): ListNode | null {
+  const dummy = new ListNode(); let cur = dummy;
+  while (l1 && l2) {
+    if (l1.val <= l2.val) { cur.next = l1; l1 = l1.next; }
+    else { cur.next = l2; l2 = l2.next; }
+    cur = cur.next;
+  }
+  cur.next = l1 ?? l2;
+  return dummy.next;
 }
 
 // ------------------------------------------
-// 4. 随机链表的复制 (Copy List with Random Pointer) [中等]
-// ------------------------------------------
-// 给你一个长度为 n 的链表，每个节点包含一个额外增加的随机指针 random，该指针可以指向链表中的任何节点或空节点。
-// 构造这个链表的 深拷贝。深拷贝应该正好由 n 个 全新 节点组成，每个新节点的值都设为其对应的原节点的值。
-// 新节点的 next 指针和 random 指针也都应指向复制链表中的新节点。
-//
-// 示例 1：
-//   输入：head = [[7,null],[13,0],[11,4],[10,2],[1,0]]
-//   输出：[[7,null],[13,0],[11,4],[10,2],[1,0]]
-//
-// 示例 2：
-//   输入：head = [[1,1],[2,1]]
-//   输出：[[1,1],[2,1]]
-
-// function copyRandomList(head: Node | null): Node | null { return null; }
-
-// ------------------------------------------
-// 5. 反转链表 II (Reverse Linked List II) [中等]
+// 3. 反转链表 II (Reverse Linked List II) [中等]
 // ------------------------------------------
 // 给你单链表的头指针 head 和两个整数 left 和 right，其中 left <= right。
 // 请你反转从位置 left 到位置 right 的链表节点，返回 反转后的链表。
@@ -109,12 +89,23 @@ function mergeTwoLists(l1: ListNode | null, l2: ListNode | null): ListNode | nul
 //   输入：head = [5], left = 1, right = 1
 //   输出：[5]
 
-function reverseBetween(head: ListNode | null, left: number, right: number): ListNode | null {
-  return null;
+function reverseBetween(
+  head: ListNode | null,
+  left: number,
+  right: number,
+): ListNode | null {
+  const dummy = new ListNode(0, head); let pre: ListNode = dummy;
+  for (let i = 1; i < left; i++) pre = pre.next!;
+  let cur = pre.next!;
+  for (let i = 0; i < right - left; i++) {
+    const next = cur.next!;
+    cur.next = next.next; next.next = pre.next; pre.next = next;
+  }
+  return dummy.next;
 }
 
 // ------------------------------------------
-// 6. K 个一组翻转链表 (Reverse Nodes in k-Group) [困难]
+// 4. K 个一组翻转链表 (Reverse Nodes in k-Group) [困难]
 // ------------------------------------------
 // 给你链表的头节点 head，每 k 个节点一组进行翻转，请你返回修改后的链表。
 // k 是一个正整数，它的值小于或等于链表的长度。
@@ -130,11 +121,20 @@ function reverseBetween(head: ListNode | null, left: number, right: number): Lis
 //   输出：[3,2,1,4,5]
 
 function reverseKGroup(head: ListNode | null, k: number): ListNode | null {
-  return null;
+  const dummy = new ListNode(0, head); let pre: ListNode = dummy;
+  while (true) {
+    let check: ListNode | null = pre;
+    for (let i = 0; i < k; i++) { check = check?.next ?? null; if (!check) return dummy.next; }
+    let cur = pre.next!;
+    for (let i = 0; i < k - 1; i++) {
+      const next = cur.next!; cur.next = next.next; next.next = pre.next; pre.next = next;
+    }
+    pre = cur;
+  }
 }
 
 // ------------------------------------------
-// 7. 删除链表的倒数第 N 个结点 (Remove Nth Node From End of List) [中等]
+// 5. 删除链表的倒数第 N 个结点 (Remove Nth Node From End of List) [中等]
 // ------------------------------------------
 // 给你一个链表，删除链表的倒数第 n 个结点，并且返回链表的头结点。
 //
@@ -151,65 +151,16 @@ function reverseKGroup(head: ListNode | null, k: number): ListNode | null {
 //   输出：[1]
 
 function removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {
-  return null;
+  const dummy = new ListNode(0, head);
+  let fast: ListNode | null = dummy, slow: ListNode | null = dummy;
+  for (let i = 0; i <= n; i++) fast = fast?.next ?? null;
+  while (fast) { fast = fast.next; slow = slow!.next; }
+  slow!.next = slow!.next?.next ?? null;
+  return dummy.next;
 }
 
 // ------------------------------------------
-// 8. 删除排序链表中的重复元素 II (Remove Duplicates from Sorted List II) [中等]
-// ------------------------------------------
-// 给定一个已排序的链表的头 head，删除原始链表中所有重复数字的节点，只留下不同的数字。
-// 返回 已排序的链表。
-//
-// 示例 1：
-//   输入：head = [1,2,3,3,4,4,5]
-//   输出：[1,2,5]
-//
-// 示例 2：
-//   输入：head = [1,1,1,2,3]
-//   输出：[2,3]
-
-function deleteDuplicates(head: ListNode | null): ListNode | null {
-  return null;
-}
-
-// ------------------------------------------
-// 9. 旋转链表 (Rotate List) [中等]
-// ------------------------------------------
-// 给你一个链表的头节点 head，旋转链表，将链表每个节点向右移动 k 个位置。
-//
-// 示例 1：
-//   输入：head = [1,2,3,4,5], k = 2
-//   输出：[4,5,1,2,3]
-//
-// 示例 2：
-//   输入：head = [0,1,2], k = 4
-//   输出：[2,0,1]
-
-function rotateRight(head: ListNode | null, k: number): ListNode | null {
-  return null;
-}
-
-// ------------------------------------------
-// 10. 分隔链表 (Partition List) [中等]
-// ------------------------------------------
-// 给你一个链表的头节点 head 和一个特定值 x，请你对链表进行分隔，
-// 使得所有 小于 x 的节点都出现在 大于或等于 x 的节点之前。
-// 你应当 保留 两个分区中每个节点的初始相对位置。
-//
-// 示例 1：
-//   输入：head = [1,4,3,2,5,2], x = 3
-//   输出：[1,2,2,4,3,5]
-//
-// 示例 2：
-//   输入：head = [2,1], x = 2
-//   输出：[1,2]
-
-function partition(head: ListNode | null, x: number): ListNode | null {
-  return null;
-}
-
-// ------------------------------------------
-// 11. LRU 缓存 (LRU Cache) [中等]
+// 6. LRU 缓存 (LRU Cache) [中等]
 // ------------------------------------------
 // 请你设计并实现一个满足 LRU (最近最少使用) 缓存约束的数据结构。
 // 实现 LRUCache 类：
@@ -226,7 +177,22 @@ function partition(head: ListNode | null, x: number): ListNode | null {
 //   输出：[null, null, null, 1, null, -1, null, -1, 3, 4]
 
 class LRUCache {
-  constructor(capacity: number) {}
-  get(key: number): number { return -1; }
-  put(key: number, value: number): void {}
+  private capacity: number;
+  private map: Map<number, number>;
+  private order: number[];
+
+  constructor(capacity: number) { this.capacity = capacity; this.map = new Map(); this.order = []; }
+
+  get(key: number): number {
+    if (!this.map.has(key)) return -1;
+    const idx = this.order.indexOf(key);
+    this.order.splice(idx, 1); this.order.push(key);
+    return this.map.get(key)!;
+  }
+
+  put(key: number, value: number): void {
+    if (this.map.has(key)) { this.order.splice(this.order.indexOf(key), 1); }
+    else if (this.map.size >= this.capacity) { this.map.delete(this.order.shift()!); }
+    this.map.set(key, value); this.order.push(key);
+  }
 }

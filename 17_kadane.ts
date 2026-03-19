@@ -21,29 +21,10 @@
 //   输出：23（整个数组就是最大子数组）
 
 function maxSubArray(nums: number[]): number {
-  return 0;
-}
-
-// ------------------------------------------
-// 2. 环形子数组的最大和 (Maximum Sum Circular Subarray) [中等]
-// ------------------------------------------
-// 给定一个长度为 n 的 环形整数数组 nums，返回 nums 的非空 子数组 的最大可能和。
-// 环形数组 意味着数组的末端将会与开头相连呈环形。形式上，nums[i] 的下一个元素是 nums[(i+1) % n]，
-// nums[i] 的前一个元素是 nums[(i-1+n) % n]。
-// 子数组 最多只能包含固定缓冲区 nums 中的每个元素一次。
-//
-// 示例 1：
-//   输入：nums = [1,-2,3,-2]
-//   输出：3（子数组 [3] 的最大和为 3）
-//
-// 示例 2：
-//   输入：nums = [5,-3,5]
-//   输出：10（子数组 [5,5]，通过环形从末尾连接到开头）
-//
-// 示例 3：
-//   输入：nums = [-3,-2,-3]
-//   输出：-2（子数组 [-2]）
-
-function maxSubarraySumCircular(nums: number[]): number {
-  return 0;
+  let cur = nums[0], max = nums[0];
+  for (let i = 1; i < nums.length; i++) {
+    cur = Math.max(nums[i], cur + nums[i]);
+    max = Math.max(max, cur);
+  }
+  return max;
 }

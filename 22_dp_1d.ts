@@ -17,7 +17,10 @@
 //   输出：3（1+1+1、1+2、2+1）
 
 function climbStairs(n: number): number {
-  return 0;
+  if (n <= 2) return n;
+  let a = 1, b = 2;
+  for (let i = 3; i <= n; i++) [a, b] = [b, a + b];
+  return b;
 }
 
 // ------------------------------------------
@@ -37,7 +40,9 @@ function climbStairs(n: number): number {
 //   输出：12（偷窃第 1、3、5 间，总金额 = 2 + 9 + 1 = 12）
 
 function rob(nums: number[]): number {
-  return 0;
+  let d2 = 0, d1 = 0;
+  for (const n of nums) [d1, d2] = [Math.max(d1, d2 + n), d1];
+  return d1;
 }
 
 // ------------------------------------------
@@ -60,7 +65,13 @@ function rob(nums: number[]): number {
 //   输出：false
 
 function wordBreak(s: string, wordDict: string[]): boolean {
-  return false;
+  const set = new Set(wordDict);
+  const dp = new Array(s.length + 1).fill(false);
+  dp[0] = true;
+  for (let i = 1; i <= s.length; i++)
+    for (let j = 0; j < i; j++)
+      if (dp[j] && set.has(s.slice(j, i))) { dp[i] = true; break; }
+  return dp[s.length];
 }
 
 // ------------------------------------------
@@ -83,7 +94,12 @@ function wordBreak(s: string, wordDict: string[]): boolean {
 //   输出：0
 
 function coinChange(coins: number[], amount: number): number {
-  return -1;
+  const dp = new Array(amount + 1).fill(Infinity);
+  dp[0] = 0;
+  for (let i = 1; i <= amount; i++)
+    for (const coin of coins)
+      if (coin <= i) dp[i] = Math.min(dp[i], dp[i - coin] + 1);
+  return dp[amount] === Infinity ? -1 : dp[amount];
 }
 
 // ------------------------------------------
@@ -106,5 +122,11 @@ function coinChange(coins: number[], amount: number): number {
 //   输出：1
 
 function lengthOfLIS(nums: number[]): number {
-  return 0;
+  const dp = new Array(nums.length).fill(1);
+  let max = 1;
+  for (let i = 1; i < nums.length; i++) {
+    for (let j = 0; j < i; j++) if (nums[j] < nums[i]) dp[i] = Math.max(dp[i], dp[j] + 1);
+    max = Math.max(max, dp[i]);
+  }
+  return max;
 }

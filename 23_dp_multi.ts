@@ -3,26 +3,7 @@
 // ============================================
 
 // ------------------------------------------
-// 1. 三角形最小路径和 (Triangle) [中等]
-// ------------------------------------------
-// 给定一个三角形 triangle，找出自顶向下的最小路径和。
-// 每一步只能移动到下一行中相邻的结点上。
-// 相邻的结点在这里指的是 下标 与 上一层结点下标 相同或者等于 上一层结点下标 + 1 的两个结点。
-//
-// 示例 1：
-//   输入：triangle = [[2],[3,4],[6,5,7],[4,1,8,3]]
-//   输出：11（自顶向下的最小路径和为 2 + 3 + 5 + 1 = 11）
-//
-// 示例 2：
-//   输入：triangle = [[-10]]
-//   输出：-10
-
-function minimumTotal(triangle: number[][]): number {
-  return 0;
-}
-
-// ------------------------------------------
-// 2. 最小路径和 (Minimum Path Sum) [中等]
+// 1. 最小路径和 (Minimum Path Sum) [中等]
 // ------------------------------------------
 // 给定一个包含非负整数的 m x n 网格 grid，请找出一条从左上角到右下角的路径，
 // 使得路径上的数字总和为最小。
@@ -37,31 +18,20 @@ function minimumTotal(triangle: number[][]): number {
 //   输出：12
 
 function minPathSum(grid: number[][]): number {
-  return 0;
+  const m = grid.length, n = grid[0].length;
+  const dp = grid.map(r => [...r]);
+  for (let i = 0; i < m; i++)
+    for (let j = 0; j < n; j++) {
+      if (i === 0 && j === 0) continue;
+      else if (i === 0) dp[i][j] += dp[i][j-1];
+      else if (j === 0) dp[i][j] += dp[i-1][j];
+      else dp[i][j] += Math.min(dp[i-1][j], dp[i][j-1]);
+    }
+  return dp[m-1][n-1];
 }
 
 // ------------------------------------------
-// 3. 不同路径 II (Unique Paths II) [中等]
-// ------------------------------------------
-// 一个机器人位于一个 m x n 网格的左上角。机器人每次只能向下或者向右移动一步。
-// 机器人试图达到网格的右下角。
-// 现在考虑网格中有障碍物。那么从左上角到右下角将会有多少条不同的路径？
-// 网格中的障碍物和空位置分别用 1 和 0 来表示。
-//
-// 示例 1：
-//   输入：obstacleGrid = [[0,0,0],[0,1,0],[0,0,0]]
-//   输出：2（有两条不同路径绕过中间的障碍物）
-//
-// 示例 2：
-//   输入：obstacleGrid = [[0,1],[0,0]]
-//   输出：1
-
-function uniquePathsWithObstacles(obstacleGrid: number[][]): number {
-  return 0;
-}
-
-// ------------------------------------------
-// 4. 最长回文子串 (Longest Palindromic Substring) [中等]
+// 2. 最长回文子串 (Longest Palindromic Substring) [中等]
 // ------------------------------------------
 // 给你一个字符串 s，找到 s 中最长的回文子串。
 //
@@ -74,37 +44,19 @@ function uniquePathsWithObstacles(obstacleGrid: number[][]): number {
 //   输出："bb"
 
 function longestPalindrome(s: string): string {
-  return "";
+  let res = "";
+  for (let i = 0; i < s.length; i++) {
+    for (const [l, r] of [[i, i], [i, i + 1]] as [number,number][]) {
+      let lo = l, hi = r;
+      while (lo >= 0 && hi < s.length && s[lo] === s[hi]) { lo--; hi++; }
+      if (hi - lo - 1 > res.length) res = s.slice(lo + 1, hi);
+    }
+  }
+  return res;
 }
 
 // ------------------------------------------
-// 5. 交错字符串 (Interleaving String) [中等]
-// ------------------------------------------
-// 给定三个字符串 s1、s2、s3，请你帮忙验证 s3 是否是由 s1 和 s2 交错 组成的。
-// 两个字符串 s 和 t 交错 的定义与过程如下，其中每个字符串都会被分割成若干 非空 子字符串：
-// - s = s1 + s2 + ... + sn
-// - t = t1 + t2 + ... + tm
-// - |n - m| <= 1
-// - 交错 是 s1 + t1 + s2 + t2 + s3 + t3 + ... 或者 t1 + s1 + t2 + s2 + t3 + s3 + ...
-//
-// 示例 1：
-//   输入：s1 = "aabcc", s2 = "dbbca", s3 = "aadbbcbcac"
-//   输出：true（s3 可以由 s1 和 s2 交错组成）
-//
-// 示例 2：
-//   输入：s1 = "aabcc", s2 = "dbbca", s3 = "aadbbbaccc"
-//   输出：false
-//
-// 示例 3：
-//   输入：s1 = "", s2 = "", s3 = ""
-//   输出：true
-
-function isInterleave(s1: string, s2: string, s3: string): boolean {
-  return false;
-}
-
-// ------------------------------------------
-// 6. 编辑距离 (Edit Distance) [中等]
+// 3. 编辑距离 (Edit Distance) [中等]
 // ------------------------------------------
 // 给你两个单词 word1 和 word2，请返回将 word1 转换成 word2 所使用的最少操作数。
 // 你可以对一个单词进行如下三种操作：
@@ -121,68 +73,13 @@ function isInterleave(s1: string, s2: string, s3: string): boolean {
 //   输出：5（intention → inention → enention → exention → exection → execution）
 
 function minDistance(word1: string, word2: string): number {
-  return 0;
-}
-
-// ------------------------------------------
-// 7. 买卖股票的最佳时机 III (Best Time to Buy and Sell Stock III) [困难]
-// ------------------------------------------
-// 给定一个数组，它的第 i 个元素是一支给定的股票在第 i 天的价格。
-// 设计一个算法来计算你所能获取的最大利润。你最多可以完成 两笔 交易。
-// 注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
-//
-// 示例 1：
-//   输入：prices = [3,3,5,0,0,3,1,4]
-//   输出：6（第 4 天买入第 6 天卖出利润3，第 7 天买入第 8 天卖出利润3，总利润 6）
-//
-// 示例 2：
-//   输入：prices = [1,2,3,4,5]
-//   输出：4（第 1 天买入第 5 天卖出，利润 4。注意不能在第 1 天和第 2 天接连购买）
-//
-// 示例 3：
-//   输入：prices = [7,6,4,3,1]
-//   输出：0
-
-function maxProfitIII(prices: number[]): number {
-  return 0;
-}
-
-// ------------------------------------------
-// 8. 买卖股票的最佳时机 IV (Best Time to Buy and Sell Stock IV) [困难]
-// ------------------------------------------
-// 给你一个整数数组 prices 和一个整数 k，其中 prices[i] 是某支给定的股票在第 i 天的价格。
-// 设计一个算法来计算你所能获取的最大利润。你最多可以完成 k 笔交易。
-// 注意：你不能同时参与多笔交易（你必须在再次购买前出售掉之前的股票）。
-//
-// 示例 1：
-//   输入：k = 2, prices = [2,4,1]
-//   输出：2（第 1 天买入第 2 天卖出，利润 = 4-2 = 2）
-//
-// 示例 2：
-//   输入：k = 2, prices = [3,2,6,5,0,3]
-//   输出：7（第 2 天买入第 3 天卖出利润4，第 5 天买入第 6 天卖出利润3，总利润 7）
-
-function maxProfitIV(k: number, prices: number[]): number {
-  return 0;
-}
-
-// ------------------------------------------
-// 9. 最大正方形 (Maximal Square) [中等]
-// ------------------------------------------
-// 在一个由 '0' 和 '1' 组成的二维矩阵内，找到只包含 '1' 的最大正方形，并返回其面积。
-//
-// 示例 1：
-//   输入：matrix = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
-//   输出：4（最大正方形边长为 2，面积为 4）
-//
-// 示例 2：
-//   输入：matrix = [["0","1"],["1","0"]]
-//   输出：1
-//
-// 示例 3：
-//   输入：matrix = [["0"]]
-//   输出：0
-
-function maximalSquare(matrix: string[][]): number {
-  return 0;
+  const m = word1.length, n = word2.length;
+  const dp = Array.from({length: m+1}, (_, i) =>
+    Array.from({length: n+1}, (_, j) => i === 0 ? j : j === 0 ? i : 0));
+  for (let i = 1; i <= m; i++)
+    for (let j = 1; j <= n; j++)
+      dp[i][j] = word1[i-1] === word2[j-1]
+        ? dp[i-1][j-1]
+        : 1 + Math.min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]);
+  return dp[m][n];
 }

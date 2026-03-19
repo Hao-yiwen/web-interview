@@ -3,72 +3,6 @@
 // ============================================
 
 // ------------------------------------------
-// 1. 验证回文串 (Valid Palindrome) [简单]
-// ------------------------------------------
-// 如果在将所有大写字符转换为小写字符、并移除所有非字母数字字符之后，
-// 短语正着读和反着读都一样，则可以认为该短语是一个 回文串。
-// 字母和数字都属于字母数字字符。给你一个字符串 s，如果它是 回文串，返回 true；否则，返回 false。
-//
-// 示例 1：
-//   输入：s = "A man, a plan, a canal: Panama"
-//   输出：true（"amanaplanacanalpanama" 是回文串）
-//
-// 示例 2：
-//   输入：s = "race a car"
-//   输出：false
-//
-// 示例 3：
-//   输入：s = " "
-//   输出：true（移除非字母数字字符后为空字符串 ""，是回文串）
-
-function isPalindrome(s: string): boolean {
-  return false;
-}
-
-// ------------------------------------------
-// 2. 判断子序列 (Is Subsequence) [简单]
-// ------------------------------------------
-// 给定字符串 s 和 t，判断 s 是否为 t 的子序列。
-// 字符串的一个子序列是原始字符串删除一些（也可以不删除）字符而不改变剩余字符相对位置
-// 形成的新字符串。（例如，"ace" 是 "abcde" 的一个子序列，而 "aec" 不是）。
-//
-// 示例 1：
-//   输入：s = "abc", t = "ahbgdc"
-//   输出：true
-//
-// 示例 2：
-//   输入：s = "axc", t = "ahbgdc"
-//   输出：false
-
-function isSubsequence(s: string, t: string): boolean {
-  return false;
-}
-
-// ------------------------------------------
-// 3. 两数之和 II - 输入有序数组 (Two Sum II - Input Array Is Sorted) [中等]
-// ------------------------------------------
-// 给你一个下标从 1 开始的整数数组 numbers，该数组已按 非递减顺序排列，
-// 请你从数组中找出满足相加之和等于目标数 target 的两个数。
-// 以长度为 2 的整数数组 [index1, index2] 的形式返回这两个数的下标 index1 和 index2。
-// 你所设计的解决方案必须只使用常量级的额外空间。
-//
-// 示例 1：
-//   输入：numbers = [2,7,11,15], target = 9
-//   输出：[1,2]（2 + 7 = 9）
-//
-// 示例 2：
-//   输入：numbers = [2,3,4], target = 6
-//   输出：[1,3]
-//
-// 示例 3：
-//   输入：numbers = [-1,0], target = -1
-//   输出：[1,2]
-
-function twoSumII(numbers: number[], target: number): number[] {
-  return [];
-}
-
-// ------------------------------------------
 // 4. 盛最多水的容器 (Container With Most Water) [中等]
 // ------------------------------------------
 // 给定一个长度为 n 的整数数组 height。有 n 条垂线，第 i 条线的两个端点是 (i, 0) 和 (i, height[i])。
@@ -84,7 +18,12 @@ function twoSumII(numbers: number[], target: number): number[] {
 //   输出：1
 
 function maxArea(height: number[]): number {
-  return 0;
+  let l = 0, r = height.length - 1, res = 0;
+  while (l < r) {
+    res = Math.max(res, Math.min(height[l], height[r]) * (r - l));
+    if (height[l] < height[r]) l++; else r--;
+  }
+  return res;
 }
 
 // ------------------------------------------
@@ -107,5 +46,20 @@ function maxArea(height: number[]): number {
 //   输出：[[0,0,0]]
 
 function threeSum(nums: number[]): number[][] {
-  return [];
+  nums.sort((a, b) => a - b);
+  const res: number[][] = [];
+  for (let i = 0; i < nums.length - 2; i++) {
+    if (i > 0 && nums[i] === nums[i - 1]) continue;
+    let l = i + 1, r = nums.length - 1;
+    while (l < r) {
+      const sum = nums[i] + nums[l] + nums[r];
+      if (sum === 0) {
+        res.push([nums[i], nums[l], nums[r]]);
+        while (l < r && nums[l] === nums[l + 1]) l++;
+        while (l < r && nums[r] === nums[r - 1]) r--;
+        l++; r--;
+      } else if (sum < 0) l++; else r--;
+    }
+  }
+  return res;
 }

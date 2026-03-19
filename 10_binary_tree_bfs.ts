@@ -22,28 +22,22 @@
 //   输出：[1,3]
 
 function rightSideView(root: TreeNode | null): number[] {
-  return [];
+  if (!root) return [];
+  const queue: TreeNode[] = [root], res: number[] = [];
+  while (queue.length) {
+    const len = queue.length;
+    for (let i = 0; i < len; i++) {
+      const node = queue.shift()!;
+      if (i === len - 1) res.push(node.val);
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+    }
+  }
+  return res;
 }
 
 // ------------------------------------------
-// 2. 二叉树的层平均值 (Average of Levels in Binary Tree) [简单]
-// ------------------------------------------
-// 给定一个非空二叉树的根节点 root，以数组的形式返回每一层节点的平均值。
-//
-// 示例 1：
-//   输入：root = [3,9,20,null,null,15,7]
-//   输出：[3.00000, 14.50000, 11.00000]
-//
-// 示例 2：
-//   输入：root = [3,9,20,15,7]
-//   输出：[3.00000, 14.50000, 11.00000]
-
-function averageOfLevels(root: TreeNode | null): number[] {
-  return [];
-}
-
-// ------------------------------------------
-// 3. 二叉树的层序遍历 (Binary Tree Level Order Traversal) [中等]
+// 2. 二叉树的层序遍历 (Binary Tree Level Order Traversal) [中等]
 // ------------------------------------------
 // 给你二叉树的根节点 root，返回其节点值的 层序遍历。（即逐层地，从左到右访问所有节点）。
 //
@@ -60,27 +54,17 @@ function averageOfLevels(root: TreeNode | null): number[] {
 //   输出：[]
 
 function levelOrder(root: TreeNode | null): number[][] {
-  return [];
-}
-
-// ------------------------------------------
-// 4. 二叉树的锯齿形层序遍历 (Binary Tree Zigzag Level Order Traversal) [中等]
-// ------------------------------------------
-// 给你二叉树的根节点 root，返回其节点值的 锯齿形层序遍历。
-// （即先从左往右，再从右往左进行下一层遍历，以此类推，层与层之间交替进行）。
-//
-// 示例 1：
-//   输入：root = [3,9,20,null,null,15,7]
-//   输出：[[3],[20,9],[15,7]]
-//
-// 示例 2：
-//   输入：root = [1]
-//   输出：[[1]]
-//
-// 示例 3：
-//   输入：root = []
-//   输出：[]
-
-function zigzagLevelOrder(root: TreeNode | null): number[][] {
-  return [];
+  if (!root) return [];
+  const queue: TreeNode[] = [root], res: number[][] = [];
+  while (queue.length) {
+    const len = queue.length, level: number[] = [];
+    for (let i = 0; i < len; i++) {
+      const node = queue.shift()!;
+      level.push(node.val);
+      if (node.left) queue.push(node.left);
+      if (node.right) queue.push(node.right);
+    }
+    res.push(level);
+  }
+  return res;
 }

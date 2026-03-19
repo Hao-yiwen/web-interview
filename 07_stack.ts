@@ -28,47 +28,22 @@
 //   输出：true
 
 function isValid(s: string): boolean {
-  return false;
+  const stack: string[] = [];
+  for (const c of s) {
+    if (c === '(' || c === '{' || c === '[') stack.push(c);
+    else {
+      const top = stack[stack.length - 1];
+      if (c === ')' && top === '(') stack.pop();
+      else if (c === '}' && top === '{') stack.pop();
+      else if (c === ']' && top === '[') stack.pop();
+      else return false;
+    }
+  }
+  return stack.length === 0;
 }
 
 // ------------------------------------------
-// 2. 简化路径 (Simplify Path) [中等]
-// ------------------------------------------
-// 给你一个字符串 path，表示指向某一文件或目录的 Unix 风格 绝对路径（以 '/' 开头），
-// 请你将其转化为 更加简洁的规范路径。
-// 在 Unix 风格的文件系统中：
-// - 一个点（.）表示当前目录本身
-// - 两个点（..）表示将目录切换到上一级
-// - 任意多个连续的斜杠（如 '//'）都被视为单个斜杠 '/'
-// 返回的简化路径必须始终以斜杠 / 开头，且两个目录名之间必须只有一个斜杠 /。
-// 最后一个目录名（如果存在）不能 以 / 结尾。
-//
-// 示例 1：
-//   输入：path = "/home/"
-//   输出："/home"
-//
-// 示例 2：
-//   输入：path = "/home//foo/"
-//   输出："/home/foo"
-//
-// 示例 3：
-//   输入：path = "/home/user/Documents/../Pictures"
-//   输出："/home/user/Pictures"
-//
-// 示例 4：
-//   输入：path = "/../"
-//   输出："/"
-//
-// 示例 5：
-//   输入：path = "/.../a/../b/c/../d/./"
-//   输出："/.../b/d"
-
-function simplifyPath(path: string): string {
-  return "";
-}
-
-// ------------------------------------------
-// 3. 最小栈 (Min Stack) [中等]
+// 2. 最小栈 (Min Stack) [中等]
 // ------------------------------------------
 // 设计一个支持 push、pop、top 操作，并能在常数时间内检索到最小元素的栈。
 // 实现 MinStack 类：
@@ -84,59 +59,15 @@ function simplifyPath(path: string): string {
 //   输出：[null,null,null,null,-3,null,0,-2]
 
 class MinStack {
-  constructor() {}
-  push(val: number): void {}
-  pop(): void {}
-  top(): number { return 0; }
-  getMin(): number { return 0; }
-}
-
-// ------------------------------------------
-// 4. 逆波兰表达式求值 (Evaluate Reverse Polish Notation) [中等]
-// ------------------------------------------
-// 给你一个字符串数组 tokens，表示一个根据 逆波兰表示法 表示的算术表达式。
-// 请你计算该表达式。返回一个表示表达式值的整数。
-// 注意：
-// - 有效的算符为 '+'、'-'、'*' 和 '/'。
-// - 每个操作数（运算对象）都可以是一个整数或者另一个表达式。
-// - 两个整数之间的除法总是 向零截断。
-// - 表达式中不含除零运算。
-//
-// 示例 1：
-//   输入：tokens = ["2","1","+","3","*"]
-//   输出：9（((2 + 1) * 3) = 9）
-//
-// 示例 2：
-//   输入：tokens = ["4","13","5","/","+"]
-//   输出：6（(4 + (13 / 5)) = 6）
-//
-// 示例 3：
-//   输入：tokens = ["10","6","9","3","+","-11","*","/","*","17","+","5","+"]
-//   输出：22
-
-function evalRPN(tokens: string[]): number {
-  return 0;
-}
-
-// ------------------------------------------
-// 5. 基本计算器 (Basic Calculator) [困难]
-// ------------------------------------------
-// 给你一个字符串表达式 s，请你实现一个基本计算器来计算并返回它的值。
-// 注意：不允许使用任何将字符串作为数学表达式计算的内置函数，比如 eval()。
-// s 由数字、'+'、'-'、'('、')'、和 ' ' 组成。
-//
-// 示例 1：
-//   输入：s = "1 + 1"
-//   输出：2
-//
-// 示例 2：
-//   输入：s = " 2-1 + 2 "
-//   输出：3
-//
-// 示例 3：
-//   输入：s = "(1+(4+5+2)-3)+(6+8)"
-//   输出：23
-
-function calculate(s: string): number {
-  return 0;
+  minStack: number[];
+  stack: number[];
+  constructor() { this.stack = []; this.minStack = []; }
+  push(val: number): void {
+    this.stack.push(val);
+    const curMin = this.minStack.length === 0 ? val : Math.min(val, this.minStack[this.minStack.length - 1]);
+    this.minStack.push(curMin);
+  }
+  pop(): void { this.stack.pop(); this.minStack.pop(); }
+  top(): number { return this.stack[this.stack.length - 1]; }
+  getMin(): number { return this.minStack[this.minStack.length - 1]; }
 }
