@@ -18,9 +18,13 @@
 
 function climbStairs(n: number): number {
   if (n <= 2) return n;
-  let a = 1, b = 2;
-  for (let i = 3; i <= n; i++) [a, b] = [b, a + b];
-  return b;
+  const dp = new Array(n + 1).fill(0);
+  dp[1] = 1;
+  dp[2] = 2;
+  for (let i = 3; i <= n; i++) {
+    dp[i] = dp[i - 1] + dp[i - 2];
+  }
+  return dp[n];
 }
 
 // ------------------------------------------
