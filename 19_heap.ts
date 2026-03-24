@@ -50,20 +50,65 @@ function findKthLargest(nums: number[], k: number): number {
 //     addNum(3)    -> [1, 2, 3]
 //     findMedian() -> 2.0
 
-class MedianFinder {
-  private lo: number[];  // 大根堆（用负数模拟）
-  private hi: number[];  // 小根堆
+// 小根堆
+class MinHeap {
+  private heap: number[] = [];
+  get size() { return this.heap.length; }
+  peek() { return this.heap[0]; }
 
-  constructor() { this.lo = []; this.hi = []; }
+  push(val: number) {
+    this.heap.push(val);
+    let i = this.heap.length - 1;
+    while (i > 0) {
+      const p = (i - 1) >> 1;
+      if (this.heap[p] <= this.heap[i]) break;
+      [this.heap[p], this.heap[i]] = [this.heap[i], this.heap[p]];
+      i = p;
+    }
+  }
+
+  pop(): number {
+    const top = this.heap[0];
+    const last = this.heap.pop()!;
+    if (this.heap.length > 0) {
+      this.heap[0] = last;
+      let i = 0;
+      while (true) {
+        let s = i, l = 2 * i + 1, r = 2 * i + 2;
+        if (l < this.heap.length && this.heap[l] < this.heap[s]) s = l;
+        if (r < this.heap.length && this.heap[r] < this.heap[s]) s = r;
+        if (s === i) break;
+        [this.heap[s], this.heap[i]] = [this.heap[i], this.heap[s]];
+        i = s;
+      }
+    }
+    return top;
+  }
+}
+
+// 大根堆：存负数取巧实现
+class MaxHeap {
+  private h = new MinHeap();
+  get size() { return this.h.size; }
+  peek() { return -this.h.peek(); }
+  push(val: number) { this.h.push(-val); }
+  pop() { return -this.h.pop(); }
+}
+
+class MedianFinder {
+  private lo = new MaxHeap();  // 大根堆，存较小的一半
+  private hi = new MinHeap();  // 小根堆，存较大的一半
 
   addNum(num: number): void {
-    this.lo.push(-num); this.lo.sort((a, b) => a - b);
-    this.hi.push(-this.lo.shift()!); this.hi.sort((a, b) => a - b);
-    if (this.lo.length < this.hi.length) { this.lo.push(-this.hi.shift()!); this.lo.sort((a, b) => a - b); }
+    this.lo.push(num);
+    this.hi.push(this.lo.pop());
+    if (this.lo.size < this.hi.size) {
+      this.lo.push(this.hi.pop());
+    }
   }
 
   findMedian(): number {
-    if (this.lo.length > this.hi.length) return -this.lo[0];
-    return (-this.lo[0] + this.hi[0]) / 2;
+    if (this.lo.size > this.hi.size) return this.lo.peek();
+    return (this.lo.peek() + this.hi.peek()) / 2;
   }
 }
