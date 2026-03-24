@@ -21,6 +21,23 @@
 //   输入：nums = [1]
 //   输出：1
 
+/**
+ * 解题思路说明：
+ * 主要利用异或运算（^）的性质。对于任意整数 x，有：
+ *   1. x ^ x = 0
+ *   2. x ^ 0 = x
+ *   3. 异或运算满足交换律和结合律
+ * 
+ * 因此，数组中所有元素异或在一起，相同的数字结果会抵消为 0，
+ * 只出现一次的数字就会被“剩下”。
+ * 这也是为什么 reduce((a, b) => a ^ b, 0) 恰好得到结果。
+ */
+
 function singleNumber(nums: number[]): number {
-  return nums.reduce((a, b) => a ^ b, 0);
+  // 依次将所有数字进行异或操作
+  let result = 0;
+  for (const num of nums) {
+    result ^= num;
+  }
+  return result;
 }

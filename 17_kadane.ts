@@ -21,10 +21,12 @@
 //   输出：23（整个数组就是最大子数组）
 
 function maxSubArray(nums: number[]): number {
-  let cur = nums[0], max = nums[0];
+  const dp = new Array(nums.length);
+  dp[0] = nums[0];
+  let max = dp[0];
   for (let i = 1; i < nums.length; i++) {
-    cur = Math.max(nums[i], cur + nums[i]);
-    max = Math.max(max, cur);
+    dp[i] = Math.max(nums[i], dp[i - 1] + nums[i]);
+    max = Math.max(max, dp[i]);
   }
   return max;
 }

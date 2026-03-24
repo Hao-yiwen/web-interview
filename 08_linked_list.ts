@@ -96,10 +96,26 @@ function reverseBetween(
 ): ListNode | null {
   const dummy = new ListNode(0, head); let pre: ListNode = dummy;
   for (let i = 1; i < left; i++) pre = pre.next!;
+  // 反转以 pre.next 开头的 right-left+1 个节点。
+  // cur 指向待翻转区间的第一个节点，每次将 cur 后面的节点插入到 pre 后面，实现头插法反转。
+  // 每执行一次循环，cur 之后的第一个节点会被移动到 pre 的后面，cur 永远指向待反转区间的尾部节点。
   let cur = pre.next!;
+  // 画图示意（假设left=2, right=4，并链表为 1 -> 2 -> 3 -> 4 -> 5）:
+  // pre —— cur —— cur.next —— cur.next.next...
+  //  ↑     ↑        ↑
+  //dummy   2        3
+  //初始: dummy->1->2->3->4->5, pre=1, cur=2
+  //第1次循环后: dummy->1->3->2->4->5
+  //           pre  cur
+  //           |    |
+  //第2次循环后: dummy->1->4->3->2->5
+  //           pre     cur
+
   for (let i = 0; i < right - left; i++) {
-    const next = cur.next!;
-    cur.next = next.next; next.next = pre.next; pre.next = next;
+    const next = cur.next!;         // 取出下一个要移动的节点
+    cur.next = next.next;           // 将 next 移出：cur 跳过 next
+    next.next = pre.next;           // next 指向翻转后的头结点
+    pre.next = next;                // pre 连接到 next，实现头插
   }
   return dummy.next;
 }
@@ -177,22 +193,23 @@ function removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {
 //   输出：[null, null, null, 1, null, -1, null, -1, 3, 4]
 
 class LRUCache {
-  private capacity: number;
-  private map: Map<number, number>;
-  private order: number[];
+  private map = new Map<number, number>();
 
-  constructor(capacity: number) { this.capacity = capacity; this.map = new Map(); this.order = []; }
+  constructor(private capacity: number) {}
 
   get(key: number): number {
     if (!this.map.has(key)) return -1;
-    const idx = this.order.indexOf(key);
-    this.order.splice(idx, 1); this.order.push(key);
-    return this.map.get(key)!;
+    const val = this.map.get(key)!;
+    this.map.delete(key);
+    this.map.set(key, val); // 移到末尾 = 最近使用
+    return val;
   }
 
   put(key: number, value: number): void {
-    if (this.map.has(key)) { this.order.splice(this.order.indexOf(key), 1); }
-    else if (this.map.size >= this.capacity) { this.map.delete(this.order.shift()!); }
-    this.map.set(key, value); this.order.push(key);
+    this.map.delete(key); // 存在则先删，统一走 set
+    if (this.map.size >= this.capacity) {
+      this.map.delete(this.map.keys().next().value!); // 删最久未用（第一个 key）
+    }
+    this.map.set(key, value);
   }
 }

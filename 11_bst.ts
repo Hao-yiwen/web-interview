@@ -18,8 +18,18 @@
 //   输入：root = [1,0,48,null,null,12,49]
 //   输出：1
 
+// BST 中序遍历 = 升序序列，相邻两元素之差最小
 function getMinimumDifference(root: TreeNode | null): number {
-  return 0;
+  let prev = -1, res = Infinity;
+  function inorder(node: TreeNode | null) {
+    if (!node) return;
+    inorder(node.left);
+    if (prev !== -1) res = Math.min(res, node.val - prev);
+    prev = node.val;
+    inorder(node.right);
+  }
+  inorder(root);
+  return res;
 }
 
 // ------------------------------------------
@@ -35,8 +45,17 @@ function getMinimumDifference(root: TreeNode | null): number {
 //   输入：root = [5,3,6,2,4,null,null,1], k = 3
 //   输出：3
 
+// 中序遍历，第 k 个访问的节点即为第 k 小
 function kthSmallest(root: TreeNode | null, k: number): number {
-  return 0;
+  let count = 0, res = 0;
+  function inorder(node: TreeNode | null) {
+    if (!node) return;
+    inorder(node.left);
+    if (++count === k) { res = node.val; return; }
+    inorder(node.right);
+  }
+  inorder(root);
+  return res;
 }
 
 // ------------------------------------------
@@ -56,6 +75,12 @@ function kthSmallest(root: TreeNode | null, k: number): number {
 //   输入：root = [5,1,4,null,null,3,6]
 //   输出：false（根节点的值是 5，但右子节点的值是 4）
 
+// 传递上下界，每个节点必须严格在 (min, max) 范围内
 function isValidBST(root: TreeNode | null): boolean {
-  return false;
+  function validate(node: TreeNode | null, min: number, max: number): boolean {
+    if (!node) return true;
+    if (node.val <= min || node.val >= max) return false;
+    return validate(node.left, min, node.val) && validate(node.right, node.val, max);
+  }
+  return validate(root, -Infinity, Infinity);
 }

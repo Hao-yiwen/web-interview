@@ -16,13 +16,18 @@
 //   输出：[1,2,3,4,8,12,11,10,9,5,6,7]
 
 function spiralOrder(matrix: number[][]): number[] {
+  const m = matrix.length, n = matrix[0].length;
   const res: number[] = [];
-  let top = 0, bottom = matrix.length - 1, left = 0, right = matrix[0].length - 1;
-  while (top <= bottom && left <= right) {
-    for (let c = left; c <= right; c++) res.push(matrix[top][c]); top++;
-    for (let r = top; r <= bottom; r++) res.push(matrix[r][right]); right--;
-    if (top <= bottom) { for (let c = right; c >= left; c--) res.push(matrix[bottom][c]); bottom--; }
-    if (left <= right) { for (let r = bottom; r >= top; r--) res.push(matrix[r][left]); left++; }
+  const dirs = [[0, 1], [1, 0], [0, -1], [-1, 0]]; // 右 下 左 上
+  const visited = Array.from({ length: m }, () => new Array(n).fill(false));
+  let r = 0, c = 0, d = 0;
+  for (let i = 0; i < m * n; i++) {
+    res.push(matrix[r][c]);
+    visited[r][c] = true;
+    const nr = r + dirs[d][0], nc = c + dirs[d][1];
+    if (nr < 0 || nr >= m || nc < 0 || nc >= n || visited[nr][nc]) d = (d + 1) % 4;
+    r += dirs[d][0];
+    c += dirs[d][1];
   }
   return res;
 }

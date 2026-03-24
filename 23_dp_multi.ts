@@ -44,15 +44,26 @@ function minPathSum(grid: number[][]): number {
 //   输出："bb"
 
 function longestPalindrome(s: string): string {
-  let res = "";
-  for (let i = 0; i < s.length; i++) {
-    for (const [l, r] of [[i, i], [i, i + 1]] as [number,number][]) {
-      let lo = l, hi = r;
-      while (lo >= 0 && hi < s.length && s[lo] === s[hi]) { lo--; hi++; }
-      if (hi - lo - 1 > res.length) res = s.slice(lo + 1, hi);
+  const n = s.length;
+  const dp = Array.from({ length: n }, () => new Array(n).fill(false));
+  let start = 0, maxLen = 1;
+
+  for (let i = 0; i < n; i++) dp[i][i] = true;
+
+  for (let len = 2; len <= n; len++) {
+    for (let i = 0; i <= n - len; i++) {
+      const j = i + len - 1;
+      if (s[i] === s[j]) {
+        dp[i][j] = len === 2 || dp[i + 1][j - 1];
+      }
+      if (dp[i][j] && len > maxLen) {
+        start = i;
+        maxLen = len;
+      }
     }
   }
-  return res;
+
+  return s.slice(start, start + maxLen);
 }
 
 // ------------------------------------------

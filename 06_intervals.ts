@@ -18,13 +18,21 @@
 
 function mergeIntervals(intervals: number[][]): number[][] {
   intervals.sort((a, b) => a[0] - b[0]);
-  const res: number[][] = [];
-  for (const interval of intervals) {
-    if (!res.length || res[res.length - 1][1] < interval[0]) res.push(interval);
-    else res[res.length - 1][1] = Math.max(res[res.length - 1][1], interval[1]);
+  const res: number[][] = [intervals[0]];
+  for (let i = 1; i < intervals.length; i++) {
+    const [start, end] = intervals[i];
+    const last = res[res.length - 1];
+    if (start <= last[1]) {
+      // 有重叠，更新末尾
+      last[1] = Math.max(last[1], end);
+    } else {
+      // 无重叠，直接加入
+      res.push([start, end]);
+    }
   }
   return res;
 }
+
 
 // ------------------------------------------
 // 2. 插入区间 (Insert Interval) [中等]
