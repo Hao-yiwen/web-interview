@@ -83,8 +83,10 @@ class EventEmit {
   once(type, handler) {
     const wrapper = (...args) => {
       this.off(type, wrapper);
-      handler.apply(this, ...args);
+      handler.apply(this, args);
     };
+    // Mark the wrapper with the original handler for correct off() logic
+    wrapper.origin = handler;
     this.on(type, wrapper);
     return this;
   }
@@ -109,7 +111,7 @@ function deepClone(obj, map = new Map()) {
   }
   let constructor = obj.constructor;
   if (/^(RegExp|Date|Error)$/i.test(constructor.name)) {
-    return new constructor();
+    return new constructor(obj);
   }
   let cloneTarget = Array.isArray(obj)
     ? []
