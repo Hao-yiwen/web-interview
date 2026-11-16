@@ -1,19 +1,28 @@
 {
-  "name": "web",
+  "name": "web-interview",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "前端/算法面试 TypeScript 练习仓库",
+  "main": "dist/sort.js",
   "scripts": {
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "start": "node dist/sort.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev:sort": "tsx sort.ts",
+    "test": "echo \"No automated tests configured\" && exit 0"
   },
-  "keywords": [],
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "interview",
+    "typescript",
+    "algorithms"
+  ],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^22.10.1",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "@types/node": "^22.20.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
   }
 }

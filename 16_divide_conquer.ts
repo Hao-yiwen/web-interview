@@ -2,7 +2,14 @@
 // 分治
 // ============================================
 
-// 注意：TreeNode 定义见 09_binary_tree.ts，ListNode 定义见 08_linked_list.ts
+class ListNode {
+  val: number;
+  next: ListNode | null;
+  constructor(val?: number, next?: ListNode | null) {
+    this.val = val === undefined ? 0 : val;
+    this.next = next === undefined ? null : next;
+  }
+}
 
 // ------------------------------------------
 // 1. 合并 K 个升序链表 (Merge k Sorted Lists) [困难]

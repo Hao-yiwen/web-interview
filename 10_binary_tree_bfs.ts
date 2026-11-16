@@ -2,7 +2,16 @@
 // 二叉树层次遍历
 // ============================================
 
-// 注意：TreeNode 定义见 09_binary_tree.ts
+class TreeNode {
+  val: number;
+  left: TreeNode | null;
+  right: TreeNode | null;
+  constructor(val?: number, left?: TreeNode | null, right?: TreeNode | null) {
+    this.val = val === undefined ? 0 : val;
+    this.left = left === undefined ? null : left;
+    this.right = right === undefined ? null : right;
+  }
+}
 
 // ------------------------------------------
 // 1. 二叉树的右视图 (Binary Tree Right Side View) [中等]

@@ -1,3 +1,12 @@
+declare global {
+  interface PromiseConstructor {
+    myAll(iterator: Iterable<any>): Promise<any[]>;
+  }
+  interface Function {
+    mybind(this: Function, contenxt: any, ...outerArgs: any[]): any;
+  }
+}
+
 function debounce(func, wait, immedit) {
   let timer = null;
   const debounced = function (...args) {
@@ -147,14 +156,18 @@ function myNew(constructor, ...args) {
   return isFunction || isObject ? result : obj;
 }
 
-Promise.myAll = function (iterator) {
+Promise.myAll = function (iterator: Iterable<any>): Promise<any[]> {
   return new Promise((resolve, reject) => {
     if (iterator == null || typeof iterator[Symbol.iterator] != "function") {
       reject(new Error("Arguments must be iterator"));
+      return;
     }
 
     let promises = Array.from(iterator);
-    if (promises.length == 0) resolve([]);
+    if (promises.length == 0) {
+      resolve([]);
+      return;
+    }
     let res = new Array(promises.length);
     let count = 0;
     promises.forEach((p, i) => {
