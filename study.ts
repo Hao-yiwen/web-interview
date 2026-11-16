@@ -1,3 +1,12 @@
+class ListNode {
+  val: number;
+  next: ListNode | null;
+  constructor(val?: number, next?: ListNode | null) {
+    this.val = val === undefined ? 0 : val;
+    this.next = next === undefined ? null : next;
+  }
+}
+
 function lengthofLts(nums: number[]): number {
   const dp = new Array(nums.length).fill(1);
   let max = 1;
@@ -123,10 +132,13 @@ function reverseBetween(
 ): ListNode | null {
   const dummy = new ListNode(0, head);
   let pre = dummy;
-  for (let i = 1; i < left; i++) pre = pre.next;
-  let cur = pre.next
-  for(let i=0;i<right-left;i++){
-    const next = cur.next
-    cur.next = next.next
+  for (let i = 1; i < left; i++) pre = pre.next!;
+  let cur = pre.next!;
+  for (let i = 0; i < right - left; i++) {
+    const next = cur.next!;
+    cur.next = next.next;
+    next.next = pre.next;
+    pre.next = next;
   }
+  return dummy.next;
 }

@@ -1,5 +1,11 @@
-import { clear, time } from "console";
-import { resolve } from "path";
+declare global {
+  interface PromiseConstructor {
+    myAll(iterator: Iterable<any>): Promise<any[]>;
+  }
+  interface Function {
+    mybind(this: Function, contenxt: any, ...outerArgs: any[]): any;
+  }
+}
 
 function debounce(func, wait, immedit) {
     let timer = null
@@ -83,7 +89,7 @@ class EventEmit{
     }
 
     once(type, handler) {
-        const wrapper = (...args) {
+        const wrapper = (...args) => {
             this.off(type, wrapper)
             handler.apply(this, ...args)
         }
@@ -145,17 +151,21 @@ function myNew(constructor, ...args) {
     return isFunction || isObject ? res : obj
 }
 
-Promise.myAll = function(iterator) {
+Promise.myAll = function (iterator: Iterable<any>): Promise<any[]> {
     return new Promise((resolve, reject) => {
         if(iterator == null || typeof iterator[Symbol.iterator] != "function") {
             reject("必须是迭代器属性")
+            return
         }
         let promises = Array.from(iterator)
-        if(promises.length == 0) resolve([])
+        if(promises.length == 0) {
+            resolve([])
+            return
+        }
         let res = new Array(promises.length)
         let count = 0
         promises.forEach((p,i) => {
-            Promise.reject(p)
+            Promise.resolve(p)
                 .then(v => {
                     res[i] = v
                     if(++count == promises.length){
